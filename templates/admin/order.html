@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <title>ទិញ {{ product['model'] }} · iPhone Store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand"><i class="fab fa-apple"></i><span>iPhone Store</span></a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/admin">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <div class="form-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div>
+                    <h2>បញ្ជាទិញ</h2>
+                    <p>{{ product['model'] }} — ${{ "%.2f"|format(product['price']) }}</p>
+                </div>
+            </div>
+
+            <form method="post">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> ឈ្មោះរបស់អ្នក</label>
+                    <input type="text" name="name" required placeholder="សុខ ដារា">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> អ៊ីមែល</label>
+                    <input type="email" name="email" required placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> លេខទូរស័ព្ទ</label>
+                    <input type="tel" name="phone" placeholder="012 345 678">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> អាសយដ្ឋាន</label>
+                    <textarea name="address" rows="2" required placeholder="ផ្ទះលេខ, ផ្លូវ, ខេត្ត/ក្រុង"></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-sort-numeric-up"></i> ចំនួន</label>
+                    <input type="number" name="quantity" value="1" min="1" max="{{ product['stock'] }}" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-premium">
+                        <i class="fas fa-check"></i> បញ្ជាក់ការទិញ
+                    </button>
+                    <a href="/" class="btn-secondary">បោះបង់</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

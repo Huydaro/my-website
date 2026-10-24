@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>iPhone Store · Premium</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fab fa-apple"></i>
+                <span>iPhone Store</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="active">Home</a>
+                <a href="/admin">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>iPhone <span class="gradient-text">គ្រប់ជំនាន់</span></h1>
+            <p>ពី iPhone 5 ដល់ iPhone 18 Pro Max — តម្លៃល្អ និងធានាគុណភាព</p>
+            <form method="get" class="hero-search">
+                <i class="fas fa-search"></i>
+                <input type="text" name="search" placeholder="ស្វែងរក iPhone..." value="{{ search }}">
+            </form>
+        </div>
+    </section>
+
+    {% if featured and not search %}
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-star"></i> ពិសេស</h2>
+                <p>iPhone ដែលពេញនិយមបំផុត</p>
+            </div>
+            <div class="featured-grid">
+                {% for p in featured %}
+                <div class="featured-card">
+                    <div class="featured-badge">Featured</div>
+                    <div class="product-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>{{ p['model'] }}</h3>
+                    <p class="text-muted">{{ p['storage'] }} · {{ p['color'] }}</p>
+                    <div class="product-price">${{ "%.2f"|format(p['price']) }}</div>
+                    <a href="/product/{{ p['id'] }}" class="btn-premium">មើលលម្អិត</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>{% if search %}លទ្ធផលស្វែងរក "{{ search }}"{% else %}iPhone ទាំងអស់{% endif %}</h2>
+                <p>{{ products|length }} ម៉ូដែល</p>
+            </div>
+
+            {% if products %}
+            <div class="services-grid">
+                {% for p in products %}
+                <div class="service-card">
+                    <div class="product-icon-small">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>{{ p['model'] }}</h3>
+                    <p class="text-muted">{{ p['storage'] }} · {{ p['color'] }} · {{ p['year'] }}</p>
+                    <p>{{ p['description'] }}</p>
+                    <div class="service-meta">
+                        <span class="service-price">${{ "%.2f"|format(p['price']) }}</span>
+                        <span class="service-duration"><i class="fas fa-box"></i> {{ p['stock'] }} left</span>
+                    </div>
+                    <div class="service-actions">
+                        <a href="/product/{{ p['id'] }}" class="btn-secondary">មើល</a>
+                        <a href="/order/{{ p['id'] }}" class="btn-premium">ទិញ</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-search"></i>
+                <h3>រកមិនឃើញ iPhone</h3>
+                <p>សូមស្វែងរកដោយឈ្មោះផ្សេង</p>
+                <a href="/" class="btn-premium">មើលទាំងអស់</a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 iPhone Store. All rights reserved.</p>
+    </footer>
+</body>
+</html>

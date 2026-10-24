@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand"><i class="fab fa-apple"></i><span>iPhone Admin</span></div>
+        <nav class="sidebar-nav">
+            <a href="/admin" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+            <a href="/admin/products" class="nav-item active"><i class="fas fa-mobile-alt"></i><span>Products</span></a>
+            <a href="/admin/orders" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
+            <a href="/" class="nav-item"><i class="fas fa-globe"></i><span>View Store</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h1>Products</h1>
+                <p class="breadcrumb">Admin / Products</p>
+            </div>
+            <a href="/admin/products/add" class="btn-premium"><i class="fas fa-plus"></i> Add iPhone</a>
+        </header>
+
+        <div class="card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Model</th><th>Storage</th><th>Color</th><th>Price</th><th>Stock</th><th>Year</th><th class="text-right">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for p in products %}
+                        <tr>
+                            <td><span class="badge">#{{ p['id'] }}</span></td>
+                            <td><strong>{{ p['model'] }}</strong></td>
+                            <td class="text-muted">{{ p['storage'] }}</td>
+                            <td class="text-muted">{{ p['color'] }}</td>
+                            <td><strong>${{ "%.2f"|format(p['price']) }}</strong></td>
+                            <td>{{ p['stock'] }}</td>
+                            <td class="text-muted">{{ p['year'] }}</td>
+                            <td class="text-right">
+                                <a href="/admin/products/edit/{{ p['id'] }}" class="icon-btn icon-edit"><i class="fas fa-pen"></i></a>
+                                <a href="/admin/products/delete/{{ p['id'] }}" class="icon-btn icon-delete" onclick="return confirm('Delete {{ p['model'] }}?')"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

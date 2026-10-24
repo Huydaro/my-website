@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Services</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand"><i class="fas fa-cube"></i><span>Admin Panel</span></div>
+        <nav class="sidebar-nav">
+            <a href="/admin" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+            <a href="/admin/services" class="nav-item active"><i class="fas fa-concierge-bell"></i><span>Services</span></a>
+            <a href="/admin/bookings" class="nav-item"><i class="fas fa-calendar-check"></i><span>Bookings</span></a>
+            <a href="/" class="nav-item"><i class="fas fa-globe"></i><span>View Website</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h1>Services</h1>
+                <p class="breadcrumb">Admin / Services</p>
+            </div>
+            <a href="/admin/services/add" class="btn-premium"><i class="fas fa-plus"></i> Add Service</a>
+        </header>
+
+        <div class="card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Icon</th><th>Name</th><th>Price</th><th>Duration</th><th class="text-right">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for s in services %}
+                        <tr>
+                            <td><span class="badge">#{{ s['id'] }}</span></td>
+                            <td><i class="fas {{ s['icon'] }}" style="color:var(--primary);font-size:18px;"></i></td>
+                            <td><strong>{{ s['name'] }}</strong></td>
+                            <td>${{ "%.2f"|format(s['price']) }}</td>
+                            <td class="text-muted">{{ s['duration'] }}</td>
+                            <td class="text-right">
+                                <a href="/admin/services/edit/{{ s['id'] }}" class="icon-btn icon-edit"><i class="fas fa-pen"></i></a>
+                                <a href="/admin/services/delete/{{ s['id'] }}" class="icon-btn icon-delete" onclick="return confirm('Delete {{ s['name'] }}?')"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
