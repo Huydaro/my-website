@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <title>Application #{{ app['id'] }} - SPI Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand"><i class="fas fa-graduation-cap"></i><span>SPI Admin</span></div>
+        <nav class="sidebar-nav">
+            <a href="/admin" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+            <a href="/admin/applications" class="nav-item active"><i class="fas fa-file-alt"></i><span>Applications</span></a>
+            <a href="/" class="nav-item"><i class="fas fa-globe"></i><span>View Website</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h1>Application #{{ app['id'] }}</h1>
+                <p class="breadcrumb">Admin / Applications / View</p>
+            </div>
+            <a href="/admin/applications" class="btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+        </header>
+
+        <div class="application-detail">
+            <div class="detail-section">
+                <h3><i class="fas fa-user"></i> ព័ត៌មានផ្ទាល់ខ្លួន</h3>
+                <div class="detail-grid">
+                    <div class="detail-item"><span>ឈ្មោះ:</span><strong>{{ app['full_name'] }}</strong></div>
+                    <div class="detail-item"><span>ភេទ:</span><strong>{{ 'ប្រុស' if app['gender'] == 'male' else 'ស្រី' }}</strong></div>
+                    <div class="detail-item"><span>ថ្ងៃកំណើត:</span><strong>{{ app['dob'] }}</strong></div>
+                    <div class="detail-item"><span>ទូរស័ព្ទ:</span><strong>{{ app['phone'] }}</strong></div>
+                    <div class="detail-item"><span>អ៊ីមែល:</span><strong>{{ app['email'] }}</strong></div>
+                    <div class="detail-item"><span>ខេត្ត:</span><strong>{{ app['province'] }}</strong></div>
+                    <div class="detail-item full-width"><span>អាសយដ្ឋាន:</span><strong>{{ app['address'] }}</strong></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3><i class="fas fa-graduation-cap"></i> ព័ត៌មានសិក្សា</h3>
+                <div class="detail-grid">
+                    <div class="detail-item"><span>ជំនាញ:</span><strong>{{ app['program'] }}</strong></div>
+                    <div class="detail-item"><span>វិទ្យាល័យ:</span><strong>{{ app['high_school'] }}</strong></div>
+                    <div class="detail-item"><span>និទ្ទេស:</span><strong>{{ app['grade'] }}</strong></div>
+                    <div class="detail-item"><span>អាហារូបករណ៍:</span>
+                        <strong class="{% if app['scholarship'] == 'yes' %}text-gold{% endif %}">
+                            {{ 'បាទ/ចាស' if app['scholarship'] == 'yes' else 'ទេ' }}
+                        </strong>
+                    </div>
+                    <div class="detail-item full-width"><span>ចំណាំ:</span><strong>{{ app['notes'] or '—' }}</strong></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3><i class="fas fa-info-circle"></i> ស្ថានភាព</h3>
+                <div class="detail-grid">
+                    <div class="detail-item"><span>ស្ថានភាព:</span>
+                        <span class="status status-{{ app['status'] }}">{{ app['status'] }}</span>
+                    </div>
+                    <div class="detail-item"><span>កាលបរិច្ឆេទ:</span><strong>{{ app['created_at'] }}</strong></div>
+                </div>
+            </div>
+
+            {% if app['status'] == 'pending' %}
+            <div class="detail-actions">
+                <a href="/admin/applications/status/{{ app['id'] }}/approved" class="btn-primary"><i class="fas fa-check"></i> Approve</a>
+                <a href="/admin/applications/status/{{ app['id'] }}/rejected" class="btn-danger"><i class="fas fa-times"></i> Reject</a>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

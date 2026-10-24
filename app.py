@@ -1,11 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, g, flash
+from flask import Flask, render_template, request, redirect, url_for, g
 import sqlite3
 import os
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-change-this'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE = os.path.join(BASE_DIR, 'my_test_database.db')
+DATABASE = os.path.join(BASE_DIR, 'spi_database.db')
 
 
 def get_db():
@@ -26,66 +25,50 @@ def close_connection(exception):
 # ============ PUBLIC ROUTES ============
 @app.route('/')
 def index():
-    db = get_db()
-    search = request.args.get('search', '').strip()
-
-    if search:
-        products = db.execute(
-            'SELECT * FROM products WHERE model LIKE ? ORDER BY year DESC',
-            (f'%{search}%',)
-        ).fetchall()
-    else:
-        products = db.execute('SELECT * FROM products ORDER BY year DESC').fetchall()
-
-    featured = db.execute('SELECT * FROM products WHERE featured = 1 ORDER BY year DESC LIMIT 3').fetchall()
-    total_products = db.execute('SELECT COUNT(*) FROM products').fetchone()[0]
-
-    return render_template('index.html',
-                           products=products,
-                           featured=featured,
-                           total_products=total_products,
-                           search=search)
+    return render_template('index.html')
 
 
-@app.route('/product/<int:id>')
-def product_detail(id):
-    db = get_db()
-    product = db.execute('SELECT * FROM products WHERE id = ?', (id,)).fetchone()
-    if not product:
-        return "Product not found", 404
-    return render_template('product_detail.html', product=product)
+@app.route('/admission')
+def admission():
+    return render_template('admission.html')
 
 
-@app.route('/order/<int:product_id>', methods=['GET', 'POST'])
-def order(product_id):
-    db = get_db()
-    product = db.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
-    if not product:
-        return "Product not found", 404
+@app.route('/programs')
+def programs():
+    return render_template('programs.html')
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
-        name = request.form['name'].strip()
+        full_name = request.form['full_name'].strip()
+        gender = request.form['gender']
+        dob = request.form['dob']
+        phone = request.form['phone'].strip()
         email = request.form['email'].strip()
-        phone = request.form.get('phone', '').strip()
-        address = request.form.get('address', '').strip()
-        quantity = int(request.form.get('quantity', 1))
-        total_price = product['price'] * quantity
+        address = request.form['address'].strip()
+        province = request.form['province']
+        program = request.form['program']
+        high_school = request.form['high_school'].strip()
+        grade = request.form['grade']
+        scholarship = request.form.get('scholarship', 'no')
+        notes = request.form.get('notes', '').strip()
 
-        db.execute(
-            '''INSERT INTO orders (product_id, customer_name, customer_email, customer_phone, address, quantity, total_price) 
-               VALUES (?, ?, ?, ?, ?, ?, ?)''',
-            (product_id, name, email, phone, address, quantity, total_price)
-        )
-        # បន្ថយ stock
-        db.execute('UPDATE products SET stock = stock - ? WHERE id = ?', (quantity, product_id))
+        db = get_db()
+        db.execute('''
+            INSERT INTO applications 
+            (full_name, gender, dob, phone, email, address, province, program, high_school, grade, scholarship, notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (full_name, gender, dob, phone, email, address, province, program, high_school, grade, scholarship, notes))
         db.commit()
-        return redirect(url_for('order_success'))
 
-    return render_template('order.html', product=product)
+        return redirect(url_for('register_success'))
+
+    return render_template('register.html')
 
 
 @app.route('/success')
-def order_success():
+def register_success():
     return render_template('success.html')
 
 
@@ -93,143 +76,59 @@ def order_success():
 @app.route('/admin')
 def admin_dashboard():
     db = get_db()
-    total_products = db.execute('SELECT COUNT(*) FROM products').fetchone()[0]
-    total_orders = db.execute('SELECT COUNT(*) FROM orders').fetchone()[0]
-    pending = db.execute("SELECT COUNT(*) FROM orders WHERE status = 'pending'").fetchone()[0]
-    revenue = db.execute("SELECT COALESCE(SUM(total_price), 0) FROM orders WHERE status != 'cancelled'").fetchone()[0]
-
-    recent_orders = db.execute('''
-        SELECT o.*, p.model as product_name 
-        FROM orders o 
-        JOIN products p ON o.product_id = p.id 
-        ORDER BY o.id DESC 
-        LIMIT 10
-    ''').fetchall()
+    total = db.execute('SELECT COUNT(*) FROM applications').fetchone()[0]
+    pending = db.execute("SELECT COUNT(*) FROM applications WHERE status = 'pending'").fetchone()[0]
+    approved = db.execute("SELECT COUNT(*) FROM applications WHERE status = 'approved'").fetchone()[0]
+    rejected = db.execute("SELECT COUNT(*) FROM applications WHERE status = 'rejected'").fetchone()[0]
+    recent = db.execute('SELECT * FROM applications ORDER BY id DESC LIMIT 10').fetchall()
 
     return render_template('admin/dashboard.html',
-                           total_products=total_products,
-                           total_orders=total_orders,
-                           pending=pending,
-                           revenue=revenue,
-                           recent_orders=recent_orders)
+                           total=total, pending=pending,
+                           approved=approved, rejected=rejected,
+                           recent=recent)
 
 
-@app.route('/admin/products')
-def admin_products():
+@app.route('/admin/applications')
+def admin_applications():
     db = get_db()
-    products = db.execute('SELECT * FROM products ORDER BY year DESC').fetchall()
-    return render_template('admin/products.html', products=products)
+    status_filter = request.args.get('status', 'all')
+
+    if status_filter == 'all':
+        applications = db.execute('SELECT * FROM applications ORDER BY id DESC').fetchall()
+    else:
+        applications = db.execute('SELECT * FROM applications WHERE status = ? ORDER BY id DESC',
+                                  (status_filter,)).fetchall()
+
+    return render_template('admin/applications.html',
+                           applications=applications,
+                           status_filter=status_filter)
 
 
-@app.route('/admin/products/add', methods=['GET', 'POST'])
-def admin_product_add():
-    if request.method == 'POST':
-        model = request.form['model'].strip()
-        storage = request.form['storage'].strip()
-        color = request.form.get('color', '').strip()
-        price = float(request.form.get('price', 0))
-        stock = int(request.form.get('stock', 0))
-        year = int(request.form.get('year', 2026))
-        description = request.form.get('description', '').strip()
-        featured = 1 if request.form.get('featured') else 0
-
-        db = get_db()
-        db.execute(
-            '''INSERT INTO products (model, storage, color, price, stock, year, description, featured) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)''',
-            (model, storage, color, price, stock, year, description, featured)
-        )
-        db.commit()
-        return redirect(url_for('admin_products'))
-
-    return render_template('admin/product_form.html', product=None)
-
-
-@app.route('/admin/products/edit/<int:id>', methods=['GET', 'POST'])
-def admin_product_edit(id):
+@app.route('/admin/applications/view/<int:id>')
+def admin_application_view(id):
     db = get_db()
-    product = db.execute('SELECT * FROM products WHERE id = ?', (id,)).fetchone()
-    if not product:
-        return "Product not found", 404
-
-    if request.method == 'POST':
-        model = request.form['model'].strip()
-        storage = request.form['storage'].strip()
-        color = request.form.get('color', '').strip()
-        price = float(request.form.get('price', 0))
-        stock = int(request.form.get('stock', 0))
-        year = int(request.form.get('year', 2026))
-        description = request.form.get('description', '').strip()
-        featured = 1 if request.form.get('featured') else 0
-
-        db.execute(
-            '''UPDATE products SET model = ?, storage = ?, color = ?, price = ?, stock = ?, year = ?, description = ?, featured = ? 
-               WHERE id = ?''',
-            (model, storage, color, price, stock, year, description, featured, id)
-        )
-        db.commit()
-        return redirect(url_for('admin_products'))
-
-    return render_template('admin/product_form.html', product=product)
+    app_data = db.execute('SELECT * FROM applications WHERE id = ?', (id,)).fetchone()
+    if not app_data:
+        return "Application not found", 404
+    return render_template('admin/application_view.html', app=app_data)
 
 
-@app.route('/admin/products/delete/<int:id>')
-def admin_product_delete(id):
-    db = get_db()
-    db.execute('DELETE FROM products WHERE id = ?', (id,))
-    db.commit()
-    return redirect(url_for('admin_products'))
-
-
-@app.route('/admin/orders')
-def admin_orders():
-    db = get_db()
-    orders = db.execute('''
-        SELECT o.*, p.model as product_name
-        FROM orders o 
-        JOIN products p ON o.product_id = p.id 
-        ORDER BY o.id DESC
-    ''').fetchall()
-    return render_template('admin/orders.html', orders=orders)
-
-
-@app.route('/admin/orders/status/<int:id>/<status>')
-def admin_order_status(id, status):
-    if status not in ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']:
+@app.route('/admin/applications/status/<int:id>/<status>')
+def admin_application_status(id, status):
+    if status not in ['pending', 'approved', 'rejected']:
         return "Invalid status", 400
     db = get_db()
-    db.execute('UPDATE orders SET status = ? WHERE id = ?', (status, id))
+    db.execute('UPDATE applications SET status = ? WHERE id = ?', (status, id))
     db.commit()
-    return redirect(url_for('admin_orders'))
+    return redirect(url_for('admin_applications'))
 
 
-@app.route('/admin/orders/delete/<int:id>')
-def admin_order_delete(id):
+@app.route('/admin/applications/delete/<int:id>')
+def admin_application_delete(id):
     db = get_db()
-    db.execute('DELETE FROM orders WHERE id = ?', (id,))
+    db.execute('DELETE FROM applications WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('admin_orders'))
-
-
-# ============ SHORTCUT ROUTES ============
-@app.route('/add')
-def add_shortcut():
-    return redirect(url_for('admin_product_add'))
-
-
-@app.route('/products')
-def products_shortcut():
-    return redirect(url_for('admin_products'))
-
-
-@app.route('/orders')
-def orders_shortcut():
-    return redirect(url_for('admin_orders'))
-
-
-@app.route('/dashboard')
-def dashboard_shortcut():
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_applications'))
 
 
 if __name__ == '__main__':

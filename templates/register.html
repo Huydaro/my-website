@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}ចុះឈ្មោះ - SPI{% endblock %}
+{% block content %}
+
+<section class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-user-plus"></i> ចុះឈ្មោះចូលរៀន</h1>
+        <p>បំពេញព័ត៌មានខាងក្រោម ដើម្បីដាក់ពាក្យចូលរៀន</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container form-container">
+        <div class="form-card">
+            <form method="post" class="application-form">
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> ព័ត៌មានផ្ទាល់ខ្លួន</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ឈ្មោះពេញ <span class="required">*</span></label>
+                            <input type="text" name="full_name" required placeholder="សុខ ដារា">
+                        </div>
+                        <div class="form-group">
+                            <label>ភេទ <span class="required">*</span></label>
+                            <select name="gender" required>
+                                <option value="">-- ជ្រើសរើស --</option>
+                                <option value="male">ប្រុស</option>
+                                <option value="female">ស្រី</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ថ្ងៃខែឆ្នាំកំណើត <span class="required">*</span></label>
+                            <input type="date" name="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label>លេខទូរស័ព្ទ <span class="required">*</span></label>
+                            <input type="tel" name="phone" required placeholder="012 345 678">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>អ៊ីមែល <span class="required">*</span></label>
+                        <input type="email" name="email" required placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>អាសយដ្ឋាន <span class="required">*</span></label>
+                        <textarea name="address" rows="2" required placeholder="ភូមិ, ឃុំ, ស្រុក"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>ខេត្ត/ក្រុង <span class="required">*</span></label>
+                        <select name="province" required>
+                            <option value="">-- ជ្រើសរើស --</option>
+                            <option>ភ្នំពេញ</option>
+                            <option>តាកែវ</option>
+                            <option>កណ្តាល</option>
+                            <option>កំពង់ចាម</option>
+                            <option>បាត់ដំបង</option>
+                            <option>សៀមរាប</option>
+                            <option>ព្រះសីហនុ</option>
+                            <option>កំពត</option>
+                            <option>កែប</option>
+                            <option>ផ្សេងៗ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><i class="fas fa-graduation-cap"></i> ព័ត៌មានសិក្សា</h3>
+                    <div class="form-group">
+                        <label>ជំនាញឯកទេស <span class="required">*</span></label>
+                        <select name="program" required>
+                            <option value="">-- ជ្រើសរើសជំនាញ --</option>
+                            <option>កសិវិទ្យា</option>
+                            <option>បច្ចេកវិទ្យាព័ត៌មាន</option>
+                            <option>គ្រប់គ្រងទេសចរណ៍</option>
+                            <option>អក្សរសាស្ត្រអង់គ្លេស</option>
+                            <option>ការងារសង្គម</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>វិទ្យាល័យ/សាលាចាស់ <span class="required">*</span></label>
+                        <input type="text" name="high_school" required placeholder="ឈ្មោះវិទ្យាល័យ">
+                    </div>
+                    <div class="form-group">
+                        <label>និទ្ទេស <span class="required">*</span></label>
+                        <select name="grade" required>
+                            <option value="">-- ជ្រើសរើស --</option>
+                            <option>A</option><option>B</option><option>C</option>
+                            <option>D</option><option>E</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ចង់បានអាហារូបករណ៍? <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="scholarship" value="yes" required>
+                                <span>បាទ/ចាស</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="scholarship" value="no">
+                                <span>ទេ</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ចំណាំបន្ថែម</label>
+                        <textarea name="notes" rows="3" placeholder="ប្រាប់យើងពីស្ថានភាពរបស់អ្នក..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary btn-large">
+                        <i class="fas fa-paper-plane"></i> ដាក់ពាក្យ
+                    </button>
+                    <a href="/" class="btn-secondary">បោះបង់</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

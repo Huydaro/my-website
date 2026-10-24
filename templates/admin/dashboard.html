@@ -2,19 +2,18 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - SPI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <aside class="sidebar">
-        <div class="sidebar-brand"><i class="fab fa-apple"></i><span>iPhone Admin</span></div>
+        <div class="sidebar-brand"><i class="fas fa-graduation-cap"></i><span>SPI Admin</span></div>
         <nav class="sidebar-nav">
             <a href="/admin" class="nav-item active"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
-            <a href="/admin/products" class="nav-item"><i class="fas fa-mobile-alt"></i><span>Products</span></a>
-            <a href="/admin/orders" class="nav-item"><i class="fas fa-shopping-cart"></i><span>Orders</span></a>
-            <a href="/" class="nav-item"><i class="fas fa-globe"></i><span>View Store</span></a>
+            <a href="/admin/applications" class="nav-item"><i class="fas fa-file-alt"></i><span>Applications</span></a>
+            <a href="/" class="nav-item"><i class="fas fa-globe"></i><span>View Website</span></a>
         </nav>
     </aside>
 
@@ -28,62 +27,49 @@
 
         <div class="stats-grid">
             <div class="stat-card stat-primary">
-                <div class="stat-icon"><i class="fas fa-mobile-alt"></i></div>
-                <div>
-                    <div class="stat-value">{{ total_products }}</div>
-                    <div class="stat-label">Products</div>
-                </div>
-            </div>
-            <div class="stat-card stat-success">
-                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
-                <div>
-                    <div class="stat-value">{{ total_orders }}</div>
-                    <div class="stat-label">Orders</div>
-                </div>
+                <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+                <div><div class="stat-value">{{ total }}</div><div class="stat-label">Total Applications</div></div>
             </div>
             <div class="stat-card stat-warning">
                 <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                <div>
-                    <div class="stat-value">{{ pending }}</div>
-                    <div class="stat-label">Pending</div>
-                </div>
+                <div><div class="stat-value">{{ pending }}</div><div class="stat-label">Pending</div></div>
             </div>
-            <div class="stat-card stat-primary">
-                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
-                <div>
-                    <div class="stat-value">${{ "%.0f"|format(revenue) }}</div>
-                    <div class="stat-label">Revenue</div>
-                </div>
+            <div class="stat-card stat-success">
+                <div class="stat-icon"><i class="fas fa-check"></i></div>
+                <div><div class="stat-value">{{ approved }}</div><div class="stat-label">Approved</div></div>
+            </div>
+            <div class="stat-card stat-danger">
+                <div class="stat-icon"><i class="fas fa-times"></i></div>
+                <div><div class="stat-value">{{ rejected }}</div><div class="stat-label">Rejected</div></div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header">
-                <h2><i class="fas fa-list"></i> Recent Orders</h2>
-                <a href="/admin/orders" class="btn-secondary">View All</a>
+                <h2><i class="fas fa-list"></i> Recent Applications</h2>
+                <a href="/admin/applications" class="btn-secondary">View All</a>
             </div>
-            {% if recent_orders %}
+            {% if recent %}
             <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr><th>ID</th><th>Customer</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th></tr>
+                        <tr><th>ID</th><th>Name</th><th>Program</th><th>Date</th><th>Status</th></tr>
                     </thead>
                     <tbody>
-                        {% for o in recent_orders %}
+                        {% for app in recent %}
                         <tr>
-                            <td><span class="badge">#{{ o['id'] }}</span></td>
-                            <td>{{ o['customer_name'] }}</td>
-                            <td>{{ o['product_name'] }}</td>
-                            <td>{{ o['quantity'] }}</td>
-                            <td><strong>${{ "%.2f"|format(o['total_price']) }}</strong></td>
-                            <td><span class="status status-{{ o['status'] }}">{{ o['status'] }}</span></td>
+                            <td><span class="badge">#{{ app['id'] }}</span></td>
+                            <td>{{ app['full_name'] }}</td>
+                            <td>{{ app['program'] }}</td>
+                            <td class="text-muted">{{ app['created_at'][:10] }}</td>
+                            <td><span class="status status-{{ app['status'] }}">{{ app['status'] }}</span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             {% else %}
-            <div class="empty-state"><i class="fas fa-inbox"></i><h3>No orders yet</h3></div>
+            <div class="empty-state"><i class="fas fa-inbox"></i><h3>No applications yet</h3></div>
             {% endif %}
         </div>
     </main>

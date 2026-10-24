@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}SPI - វិទ្យាស្ថានសន្តប៉ូល{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-graduation-cap"></i>
+                <span>SPI</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">ទំព័រដើម</a>
+                <a href="/admission">ចូលរៀន</a>
+                <a href="/programs">ជំនាញ</a>
+                <a href="/register">ចុះឈ្មោះ</a>
+                <a href="/admin">Admin</a>
+            </div>
+            <a href="/register" class="btn-nav">
+                <i class="fas fa-user-plus"></i> ចុះឈ្មោះឥឡូវ
+            </a>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-graduation-cap"></i> វិទ្យាស្ថានសន្តប៉ូល</h4>
+                <p>គ្រឹះស្ថានឧត្តមសិក្សាកាតូលិកតែមួយគត់នៅកម្ពុជា</p>
+            </div>
+            <div class="footer-section">
+                <h4>ទំនាក់ទំនង</h4>
+                <p><i class="fas fa-map-marker-alt"></i> ខេត្តតាកែវ</p>
+                <p><i class="fas fa-phone"></i> 076 60 62 566</p>
+                <p><i class="fas fa-envelope"></i> info@spi.edu.kh</p>
+            </div>
+            <div class="footer-section">
+                <h4>តំណភ្ជាប់</h4>
+                <a href="/admission"><i class="fas fa-chevron-right"></i> ការចូលរៀន</a>
+                <a href="/programs"><i class="fas fa-chevron-right"></i> ជំនាញឯកទេស</a>
+                <a href="/register"><i class="fas fa-chevron-right"></i> ចុះឈ្មោះ</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 វិទ្យាស្ថានសន្តប៉ូល (SPI)។ រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
+        </div>
+    </footer>
+</body>
+</html>

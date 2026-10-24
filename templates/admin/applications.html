@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <title>Applications - SPI Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand"><i class="fas fa-graduation-cap"></i><span>SPI Admin</span></div>
+        <nav class="sidebar-nav">
+            <a href="/admin" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+            <a href="/admin/applications" class="nav-item active"><i class="fas fa-file-alt"></i><span>Applications</span></a>
+            <a href="/" class="nav-item"><i class="fas fa-globe"></i><span>View Website</span></a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h1>Applications</h1>
+                <p class="breadcrumb">Admin / Applications</p>
+            </div>
+            <div class="filter-buttons">
+                <a href="/admin/applications?status=all" class="btn-filter {% if status_filter == 'all' %}active{% endif %}">All</a>
+                <a href="/admin/applications?status=pending" class="btn-filter {% if status_filter == 'pending' %}active{% endif %}">Pending</a>
+                <a href="/admin/applications?status=approved" class="btn-filter {% if status_filter == 'approved' %}active{% endif %}">Approved</a>
+                <a href="/admin/applications?status=rejected" class="btn-filter {% if status_filter == 'rejected' %}active{% endif %}">Rejected</a>
+            </div>
+        </header>
+
+        <div class="card">
+            {% if applications %}
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Name</th><th>Gender</th><th>Phone</th><th>Program</th><th>Scholarship</th><th>Status</th><th class="text-right">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr>
+                            <td><span class="badge">#{{ app['id'] }}</span></td>
+                            <td><strong>{{ app['full_name'] }}</strong></td>
+                            <td>{{ 'ប្រុស' if app['gender'] == 'male' else 'ស្រី' }}</td>
+                            <td class="text-muted">{{ app['phone'] }}</td>
+                            <td>{{ app['program'] }}</td>
+                            <td>
+                                {% if app['scholarship'] == 'yes' %}
+                                <span class="badge badge-gold">Yes</span>
+                                {% else %}
+                                <span class="text-muted">No</span>
+                                {% endif %}
+                            </td>
+                            <td><span class="status status-{{ app['status'] }}">{{ app['status'] }}</span></td>
+                            <td class="text-right">
+                                <a href="/admin/applications/view/{{ app['id'] }}" class="icon-btn icon-view" title="View"><i class="fas fa-eye"></i></a>
+                                {% if app['status'] == 'pending' %}
+                                <a href="/admin/applications/status/{{ app['id'] }}/approved" class="icon-btn icon-edit" title="Approve"><i class="fas fa-check"></i></a>
+                                <a href="/admin/applications/status/{{ app['id'] }}/rejected" class="icon-btn icon-delete" title="Reject"><i class="fas fa-times"></i></a>
+                                {% endif %}
+                                <a href="/admin/applications/delete/{{ app['id'] }}" class="icon-btn icon-delete" onclick="return confirm('Delete this application?')" title="Delete"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state"><i class="fas fa-inbox"></i><h3>No applications found</h3><p>No applications match the selected filter.</p></div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>
