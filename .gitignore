@@ -1,5 +1,4 @@
-@"
-__pycache__/
+﻿__pycache__/
 *.pyc
 *.db
 *.sqlite
@@ -7,4 +6,3 @@ __pycache__/
 venv/
 .idea/
 .vscode/
-"@ | Out-File -FilePath .gitignore -Encoding utf8
