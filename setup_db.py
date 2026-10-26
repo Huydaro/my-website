@@ -2,15 +2,16 @@ import sqlite3
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE = os.path.join(BASE_DIR, 'spi_database.db')
+DATABASE = os.path.join(BASE_DIR, 'spi_database_from_ubuntu.db')
+
+print(f"📁 Database: {DATABASE}")
 
 conn = sqlite3.connect(DATABASE)
 cursor = conn.cursor()
 
-cursor.execute("DROP TABLE IF EXISTS applications")
-
+# បង្កើត Table តែប្រសិនបើមិនទាន់មាន (មិនលុបទិន្នន័យចាស់)
 cursor.execute('''
-    CREATE TABLE applications (
+    CREATE TABLE IF NOT EXISTS applications (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         full_name TEXT NOT NULL,
         gender TEXT NOT NULL,
@@ -30,6 +31,11 @@ cursor.execute('''
 ''')
 
 conn.commit()
-print(f"SUCCESS: Database = {DATABASE}")
-print("Applications table created")
+
+cursor.execute("SELECT COUNT(*) FROM applications")
+count = cursor.fetchone()[0]
+
+print(f"✅ Database ready!")
+print(f"📊 ចំនួនទិន្នន័យ: {count} rows")
+
 conn.close()

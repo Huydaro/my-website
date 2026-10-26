@@ -908,3 +908,89 @@ tbody tr:last-child td { border-bottom: 0; }
     .form-actions button, .form-actions a { width: 100%; justify-content: center; }
     .page-header h1 { font-size: 24px; }
 }
+
+/* ============ MOBILE OPTIMIZATION (iPhone) ============ */
+html, body {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+input, select, textarea {
+    font-size: 16px !important;
+}
+
+.btn-primary, .btn-secondary, .btn-danger, .btn-nav, .btn-program, .btn-filter {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar {
+    padding-top: env(safe-area-inset-top);
+}
+
+@media (max-width: 428px) {
+    .nav-container { height: 56px; padding: 0 16px; }
+    .nav-brand { font-size: 16px; }
+    .nav-brand i { font-size: 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 50px 16px 40px; }
+    .hero h1 { font-size: 30px; letter-spacing: -0.8px; line-height: 1.2; }
+    .hero p { font-size: 15px; margin-bottom: 24px; }
+    .hero-buttons { flex-direction: column; gap: 10px; }
+    .hero-buttons a { width: 100%; justify-content: center; padding: 14px 20px; }
+    .hero-stats { gap: 24px; padding-top: 24px; }
+    .stat-num { font-size: 24px; }
+    .section-header h2 { font-size: 24px; }
+    .container { padding: 0 16px; }
+    .features { padding: 40px 0; }
+    .features-grid { grid-template-columns: 1fr; gap: 12px; }
+    .feature-card { padding: 24px 20px; }
+    .page-header { padding: 40px 16px 30px; }
+    .page-header h1 { font-size: 26px; }
+    .admission-grid, .programs-grid { grid-template-columns: 1fr; gap: 12px; }
+    .admission-card, .program-card { padding: 22px 18px; }
+    .form-card { padding: 22px 16px; border-radius: 12px; }
+    .form-row { grid-template-columns: 1fr; gap: 12px; }
+    .form-actions { flex-direction: column; gap: 10px; }
+    .form-actions button, .form-actions a { width: 100%; justify-content: center; }
+    .success-card { padding: 40px 24px; border-radius: 16px; }
+    .footer { padding: 40px 16px 20px; }
+    .footer-content { grid-template-columns: 1fr; gap: 24px; }
+    .sidebar { width: 60px; }
+    .sidebar-brand span, .nav-item span { display: none; }
+    .main-content { margin-left: 60px; padding: 16px; }
+    .stats-grid { grid-template-columns: 1fr; gap: 10px; }
+    .card-header { padding: 16px; flex-direction: column; align-items: flex-start; }
+    th, td { padding: 10px 14px; font-size: 12px; }
+    .detail-grid { grid-template-columns: 1fr; }
+    .application-detail { padding: 16px; }
+}
+
+@media (max-width: 390px) {
+    .hero h1 { font-size: 26px; }
+    .section-header h2 { font-size: 22px; }
+    .page-header h1 { font-size: 24px; }
+}
+
+@media (max-width: 320px) {
+    .hero h1 { font-size: 22px; }
+    .hero { padding: 40px 12px 30px; }
+    .container { padding: 0 12px; }
+    .form-card { padding: 18px 14px; }
+}
+
+@media (hover: none) {
+    .feature-card:hover, .admission-card:hover, .program-card:hover, .stat-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+    }
+}

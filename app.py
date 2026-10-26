@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE = os.path.join(BASE_DIR, 'spi_database.db')
+DATABASE = os.path.join(BASE_DIR, 'spi_database_from_ubuntu.db')
 
 
 def get_db():
