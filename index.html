@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My HomeLab Website</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .card {
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      background: #1e293b;
+      border-radius: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 8px;
+      background: #38bdf8;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>សូមស្វាគមន៍មកកាន់ My Website!</h1>
+    <p>Website នេះកំពុងដំណើរការលើ Ubuntu VM ក្នុង Proxmox HomeLab។</p>
+    <p>Local IP: 192.168.50.27</p>
+    <button onclick="showMessage()">សាកល្បង JavaScript</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    function showMessage() {
+      document.getElementById("message").textContent =
+        "JavaScript ដំណើរការជោគជ័យ!";
+    }
+  </script>
+</body>
+</html>
